@@ -1,64 +1,67 @@
 package com.example.crudapplication.impl;
 
 import com.example.crudapplication.job.Job;
+import com.example.crudapplication.job.JobRepository;
 import com.example.crudapplication.job.JobService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class JobServiceimpl implements JobService {
-    private List<Job> jobs=new ArrayList<>();
-    private Long nid=1L;
+    private JobRepository jobRepository;
+
+    public JobServiceimpl(JobRepository jobRepository) {
+        this.jobRepository = jobRepository;
+    }
 
 
     @Override
     public List<Job> findall() {
-        return jobs;
+
+        return jobRepository.findAll();
     }
 
     @Override
     public void CreateJob(Job job) {
-       job.setId(nid++);
-        jobs.add(job);
+
+        jobRepository.save(job);
 
     }
 
     @Override
     public Job getJobById(Long id) {
-        for(Job job:jobs){
-            if(job.getId().equals(id)){
-                return job;
-            }
-        }return null;
+        return jobRepository.findById(id).orElse(null);
     }
 
     @Override
     public boolean deleteJobById(Long id) {
-        Iterator<Job> iterator= jobs.iterator();
-        while(iterator.hasNext()){
-            Job job=iterator.next();
-            if(job.getId().equals(id)){
-                iterator.remove();
-                return true;
-            }
+        try {
+            jobRepository.deleteById(id);
+            return true;
+        }catch(Exception e){
+            return false;
         }
-        return false;
     }
 
     @Override
     public boolean updateJob(Long id, Job updatedJob) {
-        for(Job job:jobs){
-            if(job.getId().equals(id)){
+        Optional<Job> jobOptional=jobRepository.findById(id);
+
+            if(jobOptional.isPresent()){
+                Job job=jobOptional.get();
                 job.setTitle(updatedJob.getTitle());
                 job.setDesc(updatedJob.getDesc());
                 job.setLocation(updatedJob.getLocation());
                 job.setMinSal(updatedJob.getMinSal());
                 job.setMaxSal(updatedJob.getMaxSal());
+                jobRepository.save(job);
                 return true;
             }
-        }
+
         return false;
     }
 
