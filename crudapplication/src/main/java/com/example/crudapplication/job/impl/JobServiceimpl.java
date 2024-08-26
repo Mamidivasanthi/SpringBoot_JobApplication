@@ -1,4 +1,4 @@
-package com.example.crudapplication.impl;
+package com.example.crudapplication.job.impl;
 
 import com.example.crudapplication.job.Job;
 import com.example.crudapplication.job.JobRepository;
