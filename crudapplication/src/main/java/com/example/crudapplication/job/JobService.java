@@ -3,13 +3,18 @@ package com.example.crudapplication.job;
 import java.util.List;
 
 public interface JobService {
-    List<Job> findall();
-    void CreateJob(Job job);
+
+    List<Job> findall(Long CompanyId);
+    boolean CreateJob(Long CompanyId,Job job);
 
 
-    Job getJobById(Long id);
+    Job getJobById(Long CompanyId,Long jobId);
 
-    boolean deleteJobById(Long id);
 
-    boolean updateJob(Long id, Job updatedJob);
+
+
+
+    boolean deleteJob(Long CompanyId, Long jobId);
+
+    boolean updateJob(Long CompanyId, Long jobId, Job job);
 }
